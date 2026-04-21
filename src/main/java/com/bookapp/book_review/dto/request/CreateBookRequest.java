@@ -2,9 +2,11 @@ package com.bookapp.book_review.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 public class CreateBookRequest {
     @NotBlank(message = "Name is required")
     @Size(max = 225, message = "Name max 255 character")

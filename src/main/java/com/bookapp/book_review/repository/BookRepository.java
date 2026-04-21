@@ -22,7 +22,7 @@ public interface BookRepository extends JpaRepository<Book, UUID> {
             Pageable pageable
     );
 
-    @Query("SELECT b FROM Book B LEFT JOIN FETCH b.category where b.id = :id")
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.category where b.id = :id")
     Optional<Book> findByIdWithCategory(@Param("id") UUID id);
 
     boolean existsByIsbn(String isbn);

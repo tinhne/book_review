@@ -1,9 +1,11 @@
 package com.bookapp.book_review.dto.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
 import java.util.UUID;
 
+@Data
 public class CreateReviewRequest {
     @NotNull(message = "BookId is required")
     private UUID bookId;
