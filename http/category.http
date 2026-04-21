@@ -1,0 +1,104 @@
+@baseUrl = http://localhost:8080
+
+### 1. Đăng ký tài khoản User mới
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "user_test",
+  "email": "user@gmail.com",
+  "password": "password123"
+}
+
+### 2. Login bằng tài khoản ADMIN (Lấy từ DataSeeder)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123456"
+}
+
+> {%
+    // Lưu token của Admin vào biến toàn cục
+    client.global.set("adminToken", response.body.token);
+%}
+
+### 3. Login bằng tài khoản USER thường
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user_test",
+  "password": "password123"
+}
+
+> {%
+    // Lưu token của User thường vào biến toàn cục
+    client.global.set("accessToken", response.body.token);
+%}
+
+### 4. Lấy thông tin cá nhân (Dùng token của Admin)
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{adminToken}}
+
+###########################################################
+### TEST PHÂN QUYỀN CATEGORY
+###########################################################
+
+### 5. Lấy danh sách Category (Public - Không cần token)
+GET {{baseUrl}}/api/categories
+
+### 6. Tạo Category mới (Dùng Admin Token -> Kỳ vọng: 201 Created)
+POST {{baseUrl}}/api/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Nghệ thuật sống 11"
+}
+
+### 7. Thử tạo Category bằng User thường (Kỳ vọng: 403 Forbidden)
+# Chỗ này để test xem phân quyền có hoạt động không
+POST {{baseUrl}}/api/categories
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Hack danh mục"
+}
+
+###########################################################
+### TEST XÓA CATEGORY (DELETE)
+###########################################################
+
+### 8. Tạo một Category tạm thời để xóa
+# Chạy cái này trước để lấy ID
+POST {{baseUrl}}/api/categories
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Danh mục sắp xóa"
+}
+
+> {%
+    // Lưu lại ID của category vừa tạo vào một biến tạm
+    client.global.set("tempCategoryId", response.body.id);
+%}
+
+### 9. Thực hiện XÓA Category vừa tạo
+# Sử dụng biến {{tempCategoryId}} vừa lấy được ở trên
+DELETE {{baseUrl}}/api/categories/{{tempCategoryId}}
+Authorization: Bearer {{adminToken}}
+
+### 10. Kiểm tra lại xem đã xóa chưa (Kỳ vọng: 404 Not Found)
+# Nếu xóa thành công, khi bạn cố tình xóa lại ID đó, nó phải báo lỗi 404
+DELETE {{baseUrl}}/api/categories/{{tempCategoryId}}
+Authorization: Bearer {{adminToken}}
+
+
+### 4. Thử XÓA bằng Token của USER thường (Kỳ vọng: 403 Forbidden)
+# Chạy lại bước 1 để có ID mới, sau đó chạy bước này
+DELETE {{baseUrl}}/api/categories/{{tempCategoryId}}
+Authorization: Bearer {{accessToken}}
