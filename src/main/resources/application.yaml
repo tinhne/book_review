@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000           # 5 phút
+      connection-timeout: 20000      # 20 giây timeout khi lấy connection
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true # Bật lên để lúc đầu check xem nó có gọi vào DB không
+    open-in-view: false              # Tắt để tránh giữ DB connection
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+
+  config:
+    import: "optional:file:.env[.properties]"
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.bookreview: INFO
+    org.springframework.security: WARN

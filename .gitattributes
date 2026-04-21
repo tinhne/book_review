@@ -1,0 +1,12 @@
+* text=auto
+
+# Shell scripts (Linux/macOS)
+*.sh text eol=lf
+mvnw text eol=lf
+
+# Windows scripts
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Optional: Java files luôn LF
+*.java text eol=lf
