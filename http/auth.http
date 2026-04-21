@@ -18,3 +18,12 @@ Content-Type: application/json
   "username": "tinhneee",
   "password": "12345678"
 }
+
+> {%
+    client.global.set("accessToken", response.body.token);
+
+%}
+
+### Get current user
+GET {{baseUrl}}/api/users/me
+Authorization: Bearer {{accessToken}}
