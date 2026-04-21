@@ -3,7 +3,9 @@ package com.bookapp.book_review.dto.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
 
+@Data
 public class UpdateReviewRequest {
     @Size(min = 10, max = 5000, message = "Content from 10-5000 character")
     private String content;
