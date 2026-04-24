@@ -17,5 +17,5 @@ public class CreateReviewRequest {
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating min is 1")
     @Max(value = 5, message = "Rating max is 5")
-    private Integer ratting;
+    private Integer rating;
 }

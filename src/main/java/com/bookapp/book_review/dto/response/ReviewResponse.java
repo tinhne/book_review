@@ -16,7 +16,7 @@ public class ReviewResponse {
     private String content;
     private int rating;
     private int likeCount;
-    private boolean likedByCurrentUser;  // frontend dùng để toggle icon like
+    private boolean likedByCurrentUser;  //toggle icon like
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 @Table(
         name = "review_likes",
         uniqueConstraints = @UniqueConstraint(
-                name = "uq_user_review_like)",
+                name = "uq_user_review_like",
                 columnNames = {"user_id", "review_id"})
 )
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

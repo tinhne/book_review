@@ -17,4 +17,6 @@ public interface ReviewLikeRepository extends JpaRepository<ReviewLike, UUID> {
     // Lấy tất cả reviewId mà user đã like — dùng để set flag likedByCurrentUser
     @Query("SELECT rl.review.id FROM ReviewLike rl WHERE rl.user.id = :userId AND rl.review.id IN :reviewIds")
     Set<UUID> findLikedReviewIds(@Param("userId") UUID userId, @Param("reviewIds") Set<UUID> reviewIds);
+
+    void deleteAllByReviewId(UUID reviewId);
 }

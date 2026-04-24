@@ -1,0 +1,108 @@
+@baseUrl = http://localhost:8080
+
+### 1. Login lấy Token của USER A (Người viết review)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "tinhneee",
+  "password": "12345678"
+}
+
+> {%
+    client.global.set("userAToken", response.body.token);
+%}
+
+### 2. Login lấy Token của USER B (Người đi LIKE dạo)
+# Đảm bảo bạn đã đăng ký user_test trước đó
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "user_test",
+  "password": "password123"
+}
+
+> {%
+    client.global.set("userBToken", response.body.token);
+%}
+
+### 3. Lấy ID của một cuốn sách bất kỳ để test
+GET {{baseUrl}}/api/books?size=1
+Content-Type: application/json
+
+> {%
+    client.global.set("targetBookId", response.body.content[0].id);
+%}
+
+
+###########################################################
+### THỰC HIỆN REVIEW
+###########################################################
+
+### 4. User A viết review cho sách
+POST {{baseUrl}}/api/reviews
+Authorization: Bearer {{userAToken}}
+Content-Type: application/json
+
+{
+  "bookId": "{{targetBookId}}",
+  "content": "Cuốn sách này cực kỳ hay, kiến trúc rất rõ ràng!",
+  "rating": 5
+}
+
+> {%
+    // client.global.set("newReviewId", response.body.id);
+
+    client.global.set("newReviewId", "d58d738d-586e-418c-8944-f91861477041");
+%}
+
+
+### 5. User A cập nhật lại nội dung review
+PUT {{baseUrl}}/api/reviews/{{newReviewId}}
+Authorization: Bearer {{userAToken}}
+Content-Type: application/json
+
+{
+  "content": "Cập nhật: Sau khi đọc lại lần 2 vẫn thấy quá tuyệt vời!",
+  "rating": 5
+}
+
+
+### 6. User B thực hiện LIKE bài review của User A
+POST {{baseUrl}}/api/reviews/{{newReviewId}}/like
+Authorization: Bearer {{userBToken}}
+
+
+### 7. Thử User A tự LIKE bài của chính mình (Kỳ vọng: 400 Bad Request)
+# Để test logic "Không cho like review của chính mình"
+POST {{baseUrl}}/api/reviews/{{newReviewId}}/like
+Authorization: Bearer {{userAToken}}
+
+
+###########################################################
+### TRUY VẤN DỮ LIỆU
+###########################################################
+
+### 8. Lấy danh sách review của sách (User B đang xem)
+# Bạn sẽ thấy field "likedByCurrentUser": true vì User B đã like ở bước 6
+GET {{baseUrl}}/api/reviews/book/{{targetBookId}}?page=0&size=10
+Authorization: Bearer {{userBToken}}
+
+
+### 9. Lấy danh sách review (Khách vãng lai xem - Không token)
+# "likedByCurrentUser" sẽ luôn là false
+GET {{baseUrl}}/api/reviews/book/{{targetBookId}}
+
+
+###########################################################
+### DỌN DẸP
+###########################################################
+
+### 10. User A xóa bài review của mình
+DELETE {{baseUrl}}/api/reviews/{{newReviewId}}
+Authorization: Bearer {{userAToken}}
+
+
+### 11. Kiểm tra lại xem cuốn sách đã bị trừ reviewCount chưa
+GET {{baseUrl}}/api/books/{{targetBookId}}

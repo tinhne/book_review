@@ -1,0 +1,83 @@
+@baseUrl = http://localhost:8080
+
+### 1. Login Admin (Bắt buộc để lấy Token thực hiện Thêm/Sửa/Xóa)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin@123456"
+}
+
+> {%
+    client.global.set("adminToken", response.body.token);
+%}
+
+### 2. Lấy danh sách Category (Để lấy 1 cái categoryId gắn vào sách)
+GET {{baseUrl}}/api/categories
+
+> {%
+    // Lấy ID của category đầu tiên trong danh sách để test tạo sách
+    client.global.set("testCategoryId", response.body[0].id);
+%}
+
+
+###########################################################
+### QUẢN LÝ SÁCH (BOOKS)
+###########################################################
+
+### 3. Tạo sách mới (Admin only)
+POST {{baseUrl}}/api/books
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+  "author": "Robert C. Martin",
+  "isbn": "9780132350886",
+  "description": "Thậm chí code xấu vẫn có thể chạy, nhưng nếu code không sạch, nó có thể làm sập cả một tổ chức.",
+  "coverUrl": "https://m.media-amazon.com/images/I/41xShlnTZTL._SX376_BO1,204,203,200_.jpg",
+  "categoryId": "{{testCategoryId}}"
+}
+
+> {%
+    client.global.set("newBookId", response.body.id);
+%}
+
+
+### 4. Lấy danh sách sách (Phân trang mặc định)
+GET {{baseUrl}}/api/books
+
+
+### 5. Tìm kiếm sách và Phân trang nâng cao
+# Tìm sách có chữ "Clean", trang 0, mỗi trang 5 cuốn, xếp theo tiêu đề tăng dần
+GET {{baseUrl}}/api/books?search=Clean&page=0&size=5&sortBy=title&sortDir=asc
+
+
+### 6. Lọc sách theo Category
+GET {{baseUrl}}/api/books?categoryId={{testCategoryId}}
+
+
+### 7. Lấy chi tiết 1 cuốn sách bằng ID
+GET {{baseUrl}}/api/books/{{newBookId}}
+
+
+### 8. Cập nhật thông tin sách (Admin only)
+PUT {{baseUrl}}/api/books/{{newBookId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Clean Code (Phiên bản cập nhật)",
+  "author": "Uncle Bob",
+  "description": "Mô tả mới sau khi đã cập nhật thông tin sách."
+}
+
+
+### 9. Xóa sách (Admin only)
+DELETE {{baseUrl}}/api/books/{{newBookId}}
+Authorization: Bearer {{adminToken}}
+
+
+### 10. Kiểm tra lại sau khi xóa (Kỳ vọng: 404 Not Found)
+GET {{baseUrl}}/api/books/{{newBookId}}
