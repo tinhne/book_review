@@ -61,7 +61,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://localhost:3000",  "https://*vercel.app"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:5173",        // Vite dev
+                "http://localhost:3000",        // CRA dev (nếu có)
+                "https://*.vercel.app",         // Vercel production
+                "https://*.onrender.com"        // Render frontend (nếu deploy FE trên Render)
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(List.of("*"));
