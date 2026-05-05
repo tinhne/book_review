@@ -40,7 +40,7 @@ Content-Type: application/json
 %}
 
 ### 4. Lấy thông tin cá nhân (Dùng token của Admin)
-GET {{baseUrl}}/api/users/me
+GET {{prodUrl}}/api/users/me
 Authorization: Bearer {{adminToken}}
 
 ###########################################################
@@ -48,10 +48,10 @@ Authorization: Bearer {{adminToken}}
 ###########################################################
 
 ### 5. Lấy danh sách Category (Public - Không cần token)
-GET {{baseUrl}}/api/categories
+GET {{prodUrl}}/api/categories
 
 ### 6. Tạo Category mới (Dùng Admin Token -> Kỳ vọng: 201 Created)
-POST {{baseUrl}}/api/categories
+POST {{prodUrl}}/api/categories
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
@@ -61,7 +61,7 @@ Content-Type: application/json
 
 ### 7. Thử tạo Category bằng User thường (Kỳ vọng: 403 Forbidden)
 # Chỗ này để test xem phân quyền có hoạt động không
-POST {{baseUrl}}/api/categories
+POST {{prodUrl}}/api/categories
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 

@@ -22,12 +22,14 @@ Content-Type: application/json
 }
 
 > {%
-    client.global.set("accessToken", response.body.token);
-    // client.global.set("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzc3MDg4NTg4LCJleHAiOjE3NzcxNzQ5ODh9.01FXT_L5CXlFafZI09JWbgRyPlfR0uN_iaCiMAgVZWY");
+    // client.global.set("accessToken", response.body.token);
+    client.global.set("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aW5obmVlZTEiLCJpYXQiOjE3Nzc4OTM2MzgsImV4cCI6MTc3Nzk4MDAzOH0.hpe6JPMZU83pFy_nubAcozbuB7h0uz15vKBegTSQ8Ww");
 
 %}
 
 
 ### Get current user
 GET {{prodUrl}}/api/users/me
+#Authorization: Bearer {{accessToken}}
+
 Authorization: Bearer {{accessToken}}

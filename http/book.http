@@ -1,7 +1,9 @@
 @baseUrl = http://localhost:8080
+@prodUrl = https://bookreview-api-x5yd.onrender.com
+
 
 ### 1. Login Admin (Bắt buộc để lấy Token thực hiện Thêm/Sửa/Xóa)
-POST {{baseUrl}}/api/auth/login
+POST {{prodUrl}}/api/auth/login
 Content-Type: application/json
 
 {
@@ -14,7 +16,7 @@ Content-Type: application/json
 %}
 
 ### 2. Lấy danh sách Category (Để lấy 1 cái categoryId gắn vào sách)
-GET {{baseUrl}}/api/categories
+GET {{prodUrl}}/api/categories
 
 > {%
     // Lấy ID của category đầu tiên trong danh sách để test tạo sách
@@ -27,7 +29,7 @@ GET {{baseUrl}}/api/categories
 ###########################################################
 
 ### 3. Tạo sách mới (Admin only)
-POST {{baseUrl}}/api/books
+POST {{prodUrl}}/api/books
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
@@ -46,24 +48,24 @@ Content-Type: application/json
 
 
 ### 4. Lấy danh sách sách (Phân trang mặc định)
-GET {{baseUrl}}/api/books
+GET {{prodUrl}}/api/books
 
 
 ### 5. Tìm kiếm sách và Phân trang nâng cao
 # Tìm sách có chữ "Clean", trang 0, mỗi trang 5 cuốn, xếp theo tiêu đề tăng dần
-GET {{baseUrl}}/api/books?search=Clean&page=0&size=5&sortBy=title&sortDir=asc
+GET {{prodUrl}}/api/books?search=Clean&page=0&size=5&sortBy=title&sortDir=asc
 
 
 ### 6. Lọc sách theo Category
-GET {{baseUrl}}/api/books?categoryId={{testCategoryId}}
+GET {{prodUrl}}/api/books?categoryId={{testCategoryId}}
 
 
 ### 7. Lấy chi tiết 1 cuốn sách bằng ID
-GET {{baseUrl}}/api/books/{{newBookId}}
+GET {{prodUrl}}/api/books/{{newBookId}}
 
 
 ### 8. Cập nhật thông tin sách (Admin only)
-PUT {{baseUrl}}/api/books/{{newBookId}}
+PUT {{prodUrl}}/api/books/{{newBookId}}
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
@@ -75,9 +77,9 @@ Content-Type: application/json
 
 
 ### 9. Xóa sách (Admin only)
-DELETE {{baseUrl}}/api/books/{{newBookId}}
+DELETE {{prodUrl}}/api/books/{{newBookId}}
 Authorization: Bearer {{adminToken}}
 
 
 ### 10. Kiểm tra lại sau khi xóa (Kỳ vọng: 404 Not Found)
-GET {{baseUrl}}/api/books/{{newBookId}}
+GET {{prodUrl}}/api/books/{{newBookId}}
