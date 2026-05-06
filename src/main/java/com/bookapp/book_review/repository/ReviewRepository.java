@@ -26,4 +26,13 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     @Query("SELECT COUNT(r) FROM Review r WHERE r.book.id = :bookId")
     int countByBookId(@Param("bookId") UUID bookId);
+
+    // Lấy tất cả reviews kèm user và book — tránh N+1
+    @Query("SELECT r FROM Review r JOIN FETCH r.user JOIN FETCH r.book " +
+            "WHERE (:search IS NULL OR LOWER(r.user.username) LIKE LOWER(CONCAT('%',:search,'%')) " +
+            "OR LOWER(r.book.title) LIKE LOWER(CONCAT('%',:search,'%')))")
+    Page<Review> findAllWithSearch(@Param("search") String search, Pageable pageable);
+
+    // Đếm tổng reviews — dùng cho stats
+    long countByRatingGreaterThanEqual(int rating);
 }
