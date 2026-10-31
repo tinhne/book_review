@@ -1,4 +1,6 @@
 @baseUrl = http://localhost:8080
+@adminPassword = change-me
+@userPassword = change-me
 
 ### 1. Login lấy Token của USER A (Người viết review)
 POST {{baseUrl}}/api/auth/login
@@ -6,7 +8,7 @@ Content-Type: application/json
 
 {
   "username": "tinhneee",
-  "password": "12345678"
+  "password": "{{userPassword}}"
 }
 
 > {%
@@ -20,7 +22,7 @@ Content-Type: application/json
 
 {
   "username": "user_test",
-  "password": "password123"
+  "password": "{{userPassword}}"
 }
 
 > {%

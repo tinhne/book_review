@@ -1,35 +1,36 @@
 @baseUrl = http://localhost:8080
+@adminPassword = change-me
+@userPassword = change-me
 @prodUrl = https://bookreview-api-x5yd.onrender.com
 
 ### Register
-POST {{prodUrl}}/api/auth/register
+POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
   "username": "tinhneee1",
   "email": "test2@gmail.com",
-  "password": "12345678"
+  "password": "{{userPassword}}"
 }
 
 
 ### Login
-POST {{prodUrl}}/api/auth/login
+POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
   "username": "tinhneee1",
-  "password": "12345678"
+  "password": "{{userPassword}}"
 }
 
 > {%
-    // client.global.set("accessToken", response.body.token);
-    client.global.set("accessToken", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aW5obmVlZTEiLCJpYXQiOjE3Nzc4OTM2MzgsImV4cCI6MTc3Nzk4MDAzOH0.hpe6JPMZU83pFy_nubAcozbuB7h0uz15vKBegTSQ8Ww");
+    client.global.set("accessToken", response.body.token);
 
 %}
 
 
 ### Get current user
-GET {{prodUrl}}/api/users/me
+GET {{baseUrl}}/api/users/me
 #Authorization: Bearer {{accessToken}}
 
 Authorization: Bearer {{accessToken}}

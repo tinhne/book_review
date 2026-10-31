@@ -1,23 +1,25 @@
 @baseUrl = http://localhost:8080
+@adminPassword = change-me
+@userPassword = change-me
 @prodUrl = https://bookreview-api-x5yd.onrender.com
 
 ### 1. Đăng ký tài khoản User mới
-POST {{prodUrl}}/api/auth/register
+POST {{baseUrl}}/api/auth/register
 Content-Type: application/json
 
 {
   "username": "user_test",
   "email": "user@gmail.com",
-  "password": "password123"
+  "password": "{{userPassword}}"
 }
 
 ### 2. Login bằng tài khoản ADMIN (Lấy từ DataSeeder)
-POST {{prodUrl}}/api/auth/login
+POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "Admin@123456"
+  "password": "{{adminPassword}}"
 }
 
 > {%
@@ -26,12 +28,12 @@ Content-Type: application/json
 %}
 
 ### 3. Login bằng tài khoản USER thường
-POST {{prodUrl}}/api/auth/login
+POST {{baseUrl}}/api/auth/login
 Content-Type: application/json
 
 {
   "username": "user_test",
-  "password": "password123"
+  "password": "{{userPassword}}"
 }
 
 > {%
@@ -40,7 +42,7 @@ Content-Type: application/json
 %}
 
 ### 4. Lấy thông tin cá nhân (Dùng token của Admin)
-GET {{prodUrl}}/api/users/me
+GET {{baseUrl}}/api/users/me
 Authorization: Bearer {{adminToken}}
 
 ###########################################################
@@ -48,10 +50,10 @@ Authorization: Bearer {{adminToken}}
 ###########################################################
 
 ### 5. Lấy danh sách Category (Public - Không cần token)
-GET {{prodUrl}}/api/categories
+GET {{baseUrl}}/api/categories
 
 ### 6. Tạo Category mới (Dùng Admin Token -> Kỳ vọng: 201 Created)
-POST {{prodUrl}}/api/categories
+POST {{baseUrl}}/api/categories
 Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
@@ -61,7 +63,7 @@ Content-Type: application/json
 
 ### 7. Thử tạo Category bằng User thường (Kỳ vọng: 403 Forbidden)
 # Chỗ này để test xem phân quyền có hoạt động không
-POST {{prodUrl}}/api/categories
+POST {{baseUrl}}/api/categories
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 

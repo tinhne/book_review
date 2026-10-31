@@ -7,6 +7,7 @@ import com.bookapp.book_review.repository.CategoryRepository;
 import com.bookapp.book_review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +22,17 @@ public class DataSeeder {
     @Bean
     CommandLineRunner seedData(UserRepository userRepo,
                                CategoryRepository categoryRepo,
-                               PasswordEncoder passwordEncoder) {
+                               PasswordEncoder passwordEncoder,
+                               @Value("${app.seed.admin-password:}") String adminPassword) {
         return args -> {
-            // Tạo admin nếu chưa có
-            if (!userRepo.existsByUsername("admin")) {
+            // Tạo admin nếu chưa có (mật khẩu lấy từ biến môi trường ADMIN_PASSWORD)
+            if (adminPassword.isBlank()) {
+                log.warn("ADMIN_PASSWORD chưa được cấu hình, bỏ qua tạo tài khoản admin");
+            } else if (!userRepo.existsByUsername("admin")) {
                 userRepo.save(User.builder()
                         .username("admin")
                         .email("admin@bookreview.com")
-                        .passwordHash(passwordEncoder.encode("Admin@123456"))
+                        .passwordHash(passwordEncoder.encode(adminPassword))
                         .role(Role.ADMIN)
                         .enabled(true)
                         .build());

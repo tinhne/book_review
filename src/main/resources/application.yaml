@@ -54,6 +54,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 app:
+  seed:
+    admin-password: ${ADMIN_PASSWORD:}
   jwt:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION:86400000}
